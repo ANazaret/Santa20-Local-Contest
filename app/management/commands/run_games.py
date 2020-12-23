@@ -11,6 +11,9 @@ class Command(BaseCommand):
         parser.add_argument(
             "-n", "--num_games", default=np.inf, type=int, dest="num_games"
         )
+        parser.add_argument(
+            "-t", "--trigger", default="unkwown", type=str, dest="trigger"
+        )
 
     def handle(self, *args, **options):
         num_games = options["num_games"]
@@ -27,7 +30,7 @@ class Command(BaseCommand):
             left_agent_id, right_agent_id = choice_agents_for_game(agent_id_list)
 
             try:
-                game = run_game(env, left_agent_id, right_agent_id)
+                game = run_game(env, left_agent_id, right_agent_id, options)
             except Exception as e:
                 self.stdout.write(self.style.ERROR(e))
                 return
@@ -40,7 +43,9 @@ def choice_agents_for_game(agent_id_list):
     return np.random.choice(agent_id_list, size=2, replace=False)
 
 
-def run_game(env, left_agent_id, right_agent_id):
+def run_game(env, left_agent_id, right_agent_id, options):
+    trigger = options["trigger"]
+
     if left_agent_id == right_agent_id:
         raise ValueError("Agents must be different")
 
@@ -59,6 +64,7 @@ def run_game(env, left_agent_id, right_agent_id):
         left_current_rating=left_agent.rating,
         right_current_rating=right_agent.rating,
         configuration=env.configuration,
+        trigger=trigger,
     )
     env.run([left_agent.file.path, right_agent.file.path])
 

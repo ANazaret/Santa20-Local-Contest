@@ -192,6 +192,7 @@ class GameAdmin(admin.ModelAdmin):
         "threshold_distribution",
     )
     list_filter = (
+        "trigger",
         "left_agent__name",
         "right_agent__name",
         "status",
@@ -213,6 +214,7 @@ class GameAdmin(admin.ModelAdmin):
         "expected_rewards",
         "rewards_over_time",
         "threshold_distribution",
+        "trigger",
     )
 
     @staticmethod

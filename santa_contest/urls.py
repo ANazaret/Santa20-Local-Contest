@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from santa_contest.views import index
+from santa_contest.views import index, run_games
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
+    path('run/<int:num_games>/', run_games, name="run_games"),
 ]

@@ -73,6 +73,8 @@ class Game(models.Model):
         default=GameResult.UNKNOWN,
     )
 
+    trigger = models.CharField(blank=True, null=False, max_length=16, default='unknown')
+
     def __str__(self):
         return (
             f"Game '{self.left_agent.name}' {round(self.left_current_rating, 1)} vs "
