@@ -55,7 +55,7 @@ ROOT_URLCONF = 'santa_contest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['santa_contest/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
