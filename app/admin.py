@@ -22,7 +22,7 @@ class AgentAdmin(admin.ModelAdmin):
     fields = (
         "id",
         "name",
-        "source",
+        # "source",
         "file",
         "created_at",
         "num_games",
