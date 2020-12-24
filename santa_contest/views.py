@@ -6,12 +6,15 @@ from django.shortcuts import render, redirect
 
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, "index.html")
 
 
-def run_games(request, num_games):
+def run_games(request, num_games, agent=""):
     uid = uuid.uuid4().hex[:16]
-    process = multiprocessing.Process(target=call_command, args=("run_games",),
-                                      kwargs={"num_games": num_games, "trigger": uid})
+    process = multiprocessing.Process(
+        target=call_command,
+        args=("run_games",),
+        kwargs={"num_games": num_games, "trigger": uid, "agent": agent},
+    )
     process.start()
     return redirect("/admin/app/game/?trigger=%s" % uid)

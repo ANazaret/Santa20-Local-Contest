@@ -14,6 +14,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "-t", "--trigger", default="unkwown", type=str, dest="trigger"
         )
+        parser.add_argument("-a", "--agent", default="", type=str, dest="agent")
 
     def handle(self, *args, **options):
         num_games = options["num_games"]
@@ -27,7 +28,9 @@ class Command(BaseCommand):
         c = 1
         env = make("mab", debug=True)
         while c <= num_games:
-            left_agent_id, right_agent_id = choice_agents_for_game(agent_id_list)
+            left_agent_id, right_agent_id = choice_agents_for_game(
+                agent_id_list, options
+            )
 
             try:
                 game = run_game(env, left_agent_id, right_agent_id, options)
@@ -39,8 +42,14 @@ class Command(BaseCommand):
             c += 1
 
 
-def choice_agents_for_game(agent_id_list):
-    return np.random.choice(agent_id_list, size=2, replace=False)
+def choice_agents_for_game(agent_id_list, options):
+    if options["agent"]:
+        agent = Agent.objects.get(name=options["agent"])
+        possibilities = agent_id_list.copy()
+        possibilities.remove(agent.id)
+        return agent.id, np.random.choice(possibilities, size=1)
+    else:
+        return np.random.choice(agent_id_list, size=2, replace=False)
 
 
 def run_game(env, left_agent_id, right_agent_id, options):

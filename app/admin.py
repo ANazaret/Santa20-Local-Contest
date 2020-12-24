@@ -1,16 +1,34 @@
-import io
 import base64
-import pandas as pd
+import io
 from collections import defaultdict
-from matplotlib import pyplot as plt
+from functools import partial
+
+import pandas as pd
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from matplotlib import pyplot as plt
 
 from app.models import Agent, Game, GameResult
 
 
+def start_game(agent, num_games=10):
+    return format_html(
+        "<a href='"
+        + reverse(
+            "run_games_agent", kwargs={"agent": agent.name, "num_games": num_games}
+        )
+        + "'> Run %d games </a>" % num_games
+    )
+
+
 class AgentAdmin(admin.ModelAdmin):
-    list_display = ("name", "rating", "created_at")
+    f = partial(start_game, num_games=100)
+    f.__name__ = "Trigger 100 games"
+    g = start_game
+    g.__name__ = "Trigger 10 games"
+    list_display = ("name", "rating", "created_at", g, f)
     readonly_fields = (
         "id",
         "created_at",
